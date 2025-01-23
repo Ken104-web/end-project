@@ -25,7 +25,7 @@ var pets = []pet{
 func main(){
     router := gin.Default()
     router.GET("/pets", getPets)
-
+    router.GET("/pets/:id", getPetByID)
     router.Run("localhost:7070")
 }
 
@@ -34,5 +34,19 @@ func getPets(c *gin.Context){
     c.IndentedJSON(http.StatusOK, pets)
 }
 
+// getPetsByID finds the pet whose id matches the id
+//params sent by the client, then returns that pet as a responce
+func getPetByID(c *gin.Context){
+    id := c.Param("id")
+
+    // loop through the list of pets
+    for _, i := range pets{
+        if i.ID == id{
+            c.IndentedJSON(http.StatusOK, i)
+            return
+        }
+    }
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "pet not found"})
+}
 
 
