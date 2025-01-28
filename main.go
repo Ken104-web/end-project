@@ -24,9 +24,10 @@ var pets = []pet{
 
 func main(){
     router := gin.Default()
+    router.Use(enableCors())
     router.GET("/pets", getPets)
     router.GET("/pets/:id", getPetByID)
-    router.Run("localhost:7070")
+    router.Run("localhost:8000")
 }
 
 // creating a get funtion to obtain pets
@@ -49,4 +50,14 @@ func getPetByID(c *gin.Context){
     c.IndentedJSON(http.StatusNotFound, gin.H{"message": "pet not found"})
 }
 
+ func enableCors() gin.HandlerFunc {
+ 	return func(c *gin.Context) {
+ 		// Setting CORS headers
+ 		c.Header("Access-Control-Allow-Origin", "http://localhost:8000")
+ 		c.Header("Content-Type", "text/plain; charset=utf-8")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+ 		c.Next()
+ 	}
+ }
 
